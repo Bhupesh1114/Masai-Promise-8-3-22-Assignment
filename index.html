@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #food-preparing {
+            display: none;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #container >#select,button{
+            font-size:20px;
+            width:150px;
+            margin: 30px 0px;
+        }
+
+        #container button{
+            margin:0px;
+            background-color:#000;
+            color:#fff;
+            border: none;
+            outline: none;
+            border-radius:5px;
+            padding:10px;
+            cursor: pointer;
+            transition: all 0.5s;
+        }
+        #container button:hover{
+            background-color:rgb(71, 67, 67);
+        }
+
+        #container > p{
+            font-size:20px;
+        }
+        #container button:active{
+            transform: scale(0.90);
+        }
+        #image>img{
+            width:350px;
+            height: 350px;
+            object-fit:cover;
+            border-radius: 5px;
+            transition: all 0.6s ease-in-out;
+            cursor: pointer;
+            margin-top:20px;
+            animation:scale 1s infinite ease-in-out alternate;
+        }
+
+       @keyframes scale{
+           from {
+               transform: scale(1.1);
+           }
+           to{
+               transform: scale(1)
+           }
+       }
+
+       
+     
+    </style>
+</head>
+
+<body>
+    
+    <div id="container">
+        <select id="select">
+            <option value="burger">Burger</option>
+            <option value="coke">Coke</option>
+            <option value="fries">Fries</option>
+        </select>
+        <button onclick="onclickFun()">Order Food</button>
+        <p id="food-preparing">Your food is being prepared....</p>
+        <p id="order-id"></p>
+        <div id="image"></div>
+    </div>
+    
+
+    <script>
+
+
+        let shop = "open";
+        let foodPrepare = document.querySelector("#food-preparing");
+        function onclickFun() {
+            // Food-preparing p tag css
+            foodPrepare.style.display = "block";
+            //clearing #Order-id p tag
+            document.querySelector("#order-id").innerHTML = "";
+            // clearing #image div 
+            document.querySelector("#image").innerHTML = "";
+
+            let time = Math.floor(Math.random() * 10000);
+            let selectValue = document.querySelector("#select").value;
+            let myPromise = new Promise(function (resolve, reject) {
+                if (shop === "open") {
+                    setTimeout(function () {
+                        resolve(selectValue)
+                    }, time)
+
+                } else {
+                    reject("There is a problem");
+                }
+            })
+
+            myPromise.then(function (response) {
+                 // Food-preparing p tag css
+                foodPrepare.style.display = "none";
+
+                // .then section stuf
+                let imageTag = create("img"); // create is a function for creating tags below
+                if (response === "burger") {
+                    imageTag.src = "https://media.istockphoto.com/photos/giant-perfect-burger-large-massive-thick-classic-american-white-picture-id485832308?k=20&m=485832308&s=612x612&w=0&h=_6r2pC6wC56mnavEorg7GK7jV4-yRvmLuMRS_ubP2yI="
+                } else if (response === "fries") {
+                    imageTag.src = "https://img.kyodonews.net/english/public/images/posts/28cc1c526622dbcfbe0462ac56ac833f/photo_l.jpg"
+                } else {
+                    imageTag.src = "https://media.istockphoto.com/photos/classic-cocacola-can-picture-id465133878?k=20&m=465133878&s=612x612&w=0&h=vgcvEz4ts5WZQOhKMaKon8mIQVbr20-JhP7DKgo_wD0="
+                }
+
+                let orderId = document.querySelector("#order-id");
+                orderId.innerText = `Your order id is: ${time}`;
+
+                document.querySelector("#image").innerHTML = "";
+                document.querySelector("#image").append(imageTag);
+                console.log("response:", response, time)
+            })
+
+            myPromise.catch(function (error) {
+
+                foodPrepare.style.display = "none";
+                let imageTag = create("img");
+                imageTag.src = "https://image.shutterstock.com/image-photo/sorry-were-closed-message-board-260nw-1680587521.jpg"
+                document.querySelector("#image").innerHTML = "";
+                document.querySelector("#image").append(imageTag);
+                console.log("error:", error)
+            })
+        }
+
+        function create(tag) {
+            return document.createElement(tag);
+        }
+
+    </script>
+
+</body>
+
+</html>
